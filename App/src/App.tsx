@@ -1,41 +1,60 @@
-import { useState } from 'react'
-import './App.css'
-import axios from 'axios';
-import { Form } from './Form';
+import { useState } from "react";
+import "./App.css";
+import axios from "axios";
+import { Form } from "./Form";
 
 function App() {
-  const [buttonText, setButtonText] = useState("Test Connection")
+  const defaultButtonText = "Test Connection";
+  const [buttonText, setButtonText] = useState(defaultButtonText);
 
-  function testConnection() {
-    return axios.get('http://127.0.0.1:5000')
+  const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+
+  async function testConnection() {
+    const text = await axios
+      .get("http://127.0.0.1:5000")
+      .then(function (response) {
+        return response.data as string;
+      })
+      .catch(function (error) {
+        console.error(error);
+        return "No connection";
+      });
+    return text;
+  }
+
+  function clickButton() {
+    testConnection()
     .then(function (response) {
-      return response.data;
+      setButtonText(response);
+      delay(2000)
+      .then(function () {
+        setButtonText(defaultButtonText)
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
     })
     .catch(function (error) {
       console.error(error);
     });
   }
 
-  const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
-
   return (
     <>
       <h1>Web App w Database</h1>
       <div className="card">
-        <button onClick={async function () {
-          setButtonText(await testConnection());
-          await delay(2000);
-          setButtonText("Test Connection");
-        }}>
+        <button
+          onClick={() => {
+            clickButton();
+          }}
+        >
           {buttonText}
         </button>
-        <Form/>
       </div>
-      <p className="footer">
-        Chan Soen
-      </p>
+      <Form />
+      <p className="footer">Chan Soen</p>
     </>
   );
 }
 
-export default App
+export default App;

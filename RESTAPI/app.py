@@ -6,22 +6,10 @@ from flask_cors import CORS
 
 TABLE_NAME = "test"
 
-CREATE_ROOMS_TABLE = (
+CREATE_TEST_TABLE = (
     f"CREATE TABLE IF NOT EXISTS {TABLE_NAME} (id SERIAL PRIMARY KEY, dataName TEXT);"
 )
-
-CREATE_TEMPS_TABLE = f""""CREATE TABLE IF NOT EXISTS temperatures (room_id INTEGER, temperature REAL,
-date TIMESTAMP, FOREIGN KEY(room_id) REFERENCES {TABLE_NAME}(id) ON DELETE CASCADE);)"""
-
-INSERT_ROOOM_RETURN_ID = f"INSERT INTO {TABLE_NAME} (dataName) VALUES (%s) RETURNING id;"
-INTERT_TEMP = (
-    "INSERT INTO temperatures (room_id, temperature, date) VALUES (%s, %s, %s);"
-)
-
-GLOBAL_NUMBER_OF_DAYS = (
-    """SELECT COUNT (DISTINCT DATE(date)) AS days FROM temperatures;"""
-)
-GLOBAL_AVG = """SELECT AVG(temperature) as average FROM temperatures;"""
+INSERT_ENTRY_RETURN_ID = f"INSERT INTO {TABLE_NAME} (dataName) VALUES (%s) RETURNING id;"
 
 load_dotenv()
 
@@ -40,7 +28,7 @@ def create_test():
     dataName = data["dataName"]
     with connection:
         with connection.cursor() as cursor:
-            cursor.execute(CREATE_ROOMS_TABLE)
-            cursor.execute(INSERT_ROOOM_RETURN_ID, (dataName,))
+            cursor.execute(CREATE_TEST_TABLE)
+            cursor.execute(INSERT_ENTRY_RETURN_ID, (dataName,))
             room_id = cursor.fetchone()[0]
-    return {"id": room_id, "message": f"Room {dataName} created."}, 201
+    return {"id": room_id, "message": f"Entry {dataName} created."}, 201
