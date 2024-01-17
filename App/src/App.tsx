@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 import axios from "axios";
-import { Form } from "./Form";
+import { Form } from "./components/Form";
 
 function App() {
   const defaultButtonText = "Test Connection";
@@ -24,19 +24,19 @@ function App() {
 
   function clickButton() {
     testConnection()
-    .then(function (response) {
-      setButtonText(response);
-      delay(2000)
-      .then(function () {
-        setButtonText(defaultButtonText)
+      .then(function (response) {
+        setButtonText(response);
+        delay(2000)
+          .then(function () {
+            setButtonText(defaultButtonText);
+          })
+          .catch(function (error) {
+            console.error(error);
+          });
       })
       .catch(function (error) {
         console.error(error);
       });
-    })
-    .catch(function (error) {
-      console.error(error);
-    });
   }
 
   return (
