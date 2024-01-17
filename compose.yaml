@@ -1,0 +1,18 @@
+services:
+  app:
+    command: sh -c "npm run dev -- --host"
+    image: node:21
+    ports:
+      - 127.0.0.1:3000:3000
+    working_dir: /App
+    volumes:
+      - ./App:/App
+  server:
+    build: .
+    ports:
+      - 127.0.0.1:5000:5000
+    volumes:
+        - ./RESTAPI:/server
+    working_dir: /server
+    stdin_open: true
+    tty: true

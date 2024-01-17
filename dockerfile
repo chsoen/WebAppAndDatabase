@@ -1,14 +1,9 @@
 # syntax=docker/dockerfile:1
 
-FROM node:21
- 
-WORKDIR /usr/src/WebAppAndDatabase
+FROM python:3
 
-# Copy code
-COPY . .
-WORKDIR /usr/src/WebAppAndDatabase/App
 # Install dependencies
-RUN npm ci
-EXPOSE 3000/tcp
-# Run the webpage
-CMD ["npm", "run", "dev", "--", "--host"]
+COPY ./RESTAPI/requirements.txt ./requirements.txt
+RUN python -m venv .venv \
+    && . .venv/bin/activate \
+    && pip install -r requirements.txt
