@@ -8,11 +8,11 @@ services:
     volumes:
       - ./App:/App
   server:
-    build: .
+    build: python3
     ports:
       - 127.0.0.1:5000:5000
     volumes:
         - ./RESTAPI:/server
-    working_dir: /server
     stdin_open: true
     tty: true
+    command: sh -c "python -m venv .venv && . .venv/bin/activate && cd server && pip install -r requirements.txt && flask run --host=0.0.0.0"
